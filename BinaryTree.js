@@ -121,38 +121,130 @@ class BinarySearchTree {
 // find the furthest that the tree extends on the left and right
 // establish a counter variable
 
-const findHeight = bst => {
+const findHeight = (bst) => {
   if (!bst.left && !bst.right) {
     return 1;
   }
   if (bst.left === null) {
-    return findHeight(bst.right);
+    return findHeight(bst.right) + 1;
   }
   if (bst.right === null) {
-    return findHeight(bst.left);
+    return findHeight(bst.left) + 1;
   }
 
-  console.log('MATH MAX: ', Math.max(findHeight(bst.left), findHeight(bst.right)));
-
-  return Math.max(findHeight(bst.left), findHeight(bst.right)) + 1;
+  return (Math.max(findHeight(bst.left), findHeight(bst.right)) + 1);
 };
+
+// console.log('MATH MAX: ', Math.max(findHeight(bst.left), findHeight(bst.right)));
+
+
+//============================================ Is BST?  ======================================>
+
+// take in a binary tree as parameter
+// 
+
+const isBST = (bst,status=true) => {
+  if (!bst.left && !bst.right) {
+    return status;
+  }
+  if (bst.left === null) {
+    return isBST(bst.right);
+  }
+  if (bst.right === null) {
+    return isBST(bst.left);
+  }
+  if (bst.right.key < bst.key || bst.left.key > bst.key) {
+    status = false;
+    return status;
+  }
+  if (isBST(bst.right) && isBST(bst.left)) {
+    return status;
+  }
+
+};
+
+//============================================ Third largest node ======================================>
+
+// take bst as a parameter
+// take an array as a parameter
+// use logic to find the largest node.
+// every time you move forwards push the counter to the array;
+// as a base case (.right is null) return arr.length -3
+
+
+const thirdLargest = bst => {
+
+  const addToArr = (bst) => {
+    if (!bst.right && !bst.left) {
+      return [bst.key];
+    }
+    if (bst.right && bst.left) {
+      return [...addToArr(bst.left), ... addToArr(bst.right), bst.key];
+    } 
+  
+    if (!bst.right) {
+      return [...addToArr(bst.left), bst.key];
+    }
+  
+    if (!bst.left) {
+      return [...addToArr(bst.right), bst.key];
+    }
+  
+  };
+
+  let sortedArr = addToArr(bst);
+  sortedArr = sortedArr.sort((a,b) => {
+    return a>b;
+  });
+  return sortedArr[sortedArr.length-3];
+};
+
+//============================================ Balanced BST ======================================>
+
+//Write an algorithm that checks if a BST is balanced (i.e. a tree where no two leaves differ in distance from the root by more than one).
+
+// take BST as parameter
+// take array as a parameter
+// take a counter as parameter
+
+const isEven = bst => {
+  // if (!bst.left && !bst.right) {
+  //   return true;
+  // }
+
+  if (!bst.left) {
+    return !(bst.right && (bst.right.left || bst.right.right));
+  }
+  
+  if (!bst.right) {
+    return !(bst.left && (bst.left.right || bst.left.left));
+  }
+  
+  return (isEven(bst.left) && isEven(bst.right));
+};
+
+
 
 
 //============================================ Main Function ======================================>
 
 function main() {
   const myTree = new BinarySearchTree();
+  myTree.insert(4);
+  myTree.insert(2);
   myTree.insert(3);
   myTree.insert(10);
-  myTree.insert(15);
-  myTree.insert(12);
-  myTree.insert(1);
-  myTree.insert(50);
-  myTree.insert(45);
-
+  myTree.insert(30);
+  myTree.insert(31);
+  myTree.insert(33);
+  
 
   // console.log(myTree);
-  console.log(findHeight(myTree));
+  // console.log(findHeight(myTree));
+  // console.log(isBST(myTree));
+  // console.log(thirdLargest(myTree));
+  // console.log(thirdLargest(myTree));
+  console.log(isEven(myTree));
 }
 
 
